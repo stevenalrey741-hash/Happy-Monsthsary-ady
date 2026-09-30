@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Monthsary!</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-pink: #ff6b81;
+            --soft-pink: #ffb8c6;
+            --deep-red: #d63031;
+            --bg-color: #ffeef2;
+            --white: #ffffff;
+            --dark-text: #2d3436;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Floating Hearts Canvas */
+        #hearts-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Music Controls Floating Button */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--white);
+            border: 2px solid var(--primary-pink);
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .music-btn i {
+            color: var(--primary-pink);
+            font-size: 1.2rem;
+        }
+
+        /* Envelope / Landing Reveal Section */
+        .envelope-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+            text-align: center;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.03);
+        }
+
+        .envelope {
+            width: 280px;
+            height: 190px;
+            background: #ff8fa3;
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .envelope i.fa-heart {
+            font-size: 3.5rem;
+            color: var(--white);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .open-btn {
+            margin-top: 25px;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: var(--primary-pink);
+            color: var(--white);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.4);
+            transition: background 0.3s;
+        }
+
+        .open-btn:hover {
+            background: var(--deep-red);
+        }
+
+        /* Main Content Cards */
+        .content-section {
+            display: none;
+            animation: fadeIn 1.2s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        h1, h2 {
+            font-family: 'Dancing Script', cursive;
+            color: var(--deep-red);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        /* Counter Styling */
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .counter-box {
+            background: var(--bg-color);
+            padding: 15px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--soft-pink);
+        }
+
+        .counter-number {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary-pink);
+        }
+
+        .counter-label {
+            font-size: 0.85rem;
+            color: #636e72;
+        }
+
+        /* Song Lyrics Showcase Section */
+        .lyrics-box {
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a4a4a;
+            background: #fff0f3;
+            padding: 25px;
+            border-left: 4px solid var(--primary-pink);
+            border-radius: 8px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .lyrics-box i.fa-quote-left {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: rgba(255, 107, 129, 0.2);
+            font-size: 2rem;
+        }
+
+        /* Photo Gallery Polaroid Style */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 12px 12px 20px 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        .polaroid:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg);
+            z-index: 10;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        .polaroid p {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        /* Love Reasons Grid */
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .reason-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            border-left: 4px solid var(--primary-pink);
+            transition: transform 0.2s;
+        }
+
+        .reason-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .reason-card h4 {
+            color: var(--deep-red);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Message Letter */
+        .letter-content {
+            text-align: left;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            color: #2d3436;
+            white-space: pre-line;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .counter-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            h1 { font-size: 2.3rem; }
+            h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="hearts-canvas"></canvas>
+
+    <!-- Audio Element with Vocaroo Direct Audio Link -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://media.vocaroo.com/mp3/1bhTJf4IZgT1" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Floating Audio Control -->
+    <button class="music-btn" onclick="toggleMusic()">
+        <i class="fa-solid fa-music" id="music-icon"></i>
+        <span id="music-text">Play "All of Me"</span>
+    </button>
+
+    <div class="container">
+        <!-- Envelope Reveal Section -->
+        <div class="envelope-section" id="envelope-section">
+            <h1 style="margin-bottom: 20px;">May message ako para sa'yo hehe</h1>
+            <div class="envelope-wrapper" onclick="openCard()">
+                <div class="envelope">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+            </div>
+            <button class="open-btn" onclick="openCard()">iopen ang Envelope <i class="fa-solid fa-envelope-open-text"></i></button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-section" id="content-section">
+            
+            <!-- Header Banner -->
+            <div class="card">
+                <h1>Happy Monthsary, Ady!</h1>
+                <p>Naging tayo noong <strong>June 2, 2025</strong> ❤️</p>
+            </div>
+
+            <!-- Love Duration Timer -->
+            <div class="card">
+                <h2>Bilang ng mga araw na nag simula tayo hanggang ngayon</h2>
+                <div class="counter-grid">
+                    <div class="counter-box">
+                        <div class="counter-number" id="days">0</div>
+                        <div class="counter-label">Araw</div>
+                    </div>
+                    <div class="counter-box">
+                        <div class="counter-number" id="hours">0</div>
+                        <div class="counter-label">Oras</div>
+                    </div>
+                    <div class="counter-box">
+                        <div class="counter-number" id="minutes">0</div>
+                        <div class="counter-label">Minuto</div>
+                    </div>
+                    <div class="counter-box">
+                        <div class="counter-number" id="seconds">0</div>
+                        <div class="counter-label">Segundo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dedicated Song Section -->
+            <div class="card">
+                <h2>I Love You Ady</h2>
+                <div class="lyrics-box">
+                    <i class="fa-solid fa-quote-left"></i>
+                    " Alam mo ady minsan nakakatampo ka po<br>
+                    kasi parang kayang kaya moko di kausapin<br>
+                    nakakasama lang ng loob minsan ady kasi masakit<br>
+                    lang para sakin na kaya mo ko wag pansinin<br>
+                    kaya nag tatampo lang ako sayo minsan <br>
+                    pag nag sasabi naman ako sayo ady<br>
+                    parang di mo naman po ako pinapansin<br>
+                    kaya minsan naiipon na lang yung tampo ko sayo ady"
+                </div>
+                <p style="color: #636e72; font-size: 0.95rem;">
+                    Pero kahit ganun ka sakin iintindihin na lang kita mahal na mahal kita e.
+                </p>
+            </div>
+
+            <!-- Polaroid Photo Gallery -->
+            <div class="card">
+                <h2>First pic natin</h2>
+                <div class="gallery-grid">
+                    <div class="polaroid">
+                        <img src="https://i.imgur.com/got0alh.jpeg" alt="Memory 1" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=500'">
+                        <p>First pic natin kahit di maayos hehhe</p>
+                    </div>
+                    <div class="polaroid">
+                        <img src="https://i.imgur.com/0wjGQxi.jpeg" alt="Memory 2" onerror="this.src='https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=500'">
+                        <p>Yung ginawa nating palpak HAHHAHAHHA nasayang yung blue sakin</p>
+                    </div>
+                    <div class="polaroid">
+                        <img src="https://i.imgur.com/PMVR1qc.png" alt="Memory 3" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=500'">
+                        <p>Eto yung pic natin na medyo matino</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reasons Why I Love You -->
+            <div class="card">
+                <h2>Mga Reason Kung Bakit Kita Mahal na Mahal</h2>
+                <div class="reasons-grid">
+                    <div class="reason-card">
+                        <h4><i class="fa-solid fa-heart"></i> Yung pagiging malambing mo</h4>
+                        <p>Sa tuwing good mood ka sakin ady dun lumalabas pagiging malambing mo kaya dun ako lalo nahuhulog sayo e.</p>
+                    </div>
+                    <div class="reason-card">
+                        <h4><i class="fa-solid fa-heart"></i> Pagiging maalalahanin</h4>
+                        <p>Sa tuwing may prob ako or di ako okay andyan ikaw para damayan ako</p>
+                    </div>
+                    <div class="reason-card">
+                        <h4><i class="fa-solid fa-heart"></i> Bonus na lang to e yung pagiging maganda mo at pagiging naughty mo hehe</h4>
+                        <p>Alam mo yan gandang ganda ako sayo ady kaya nga takot na takot ako mawala ka sakin kasi naka jackpot nako sayo ayaw ko sayangin ka tas yung pagiging wild mo minsan mas lalo nakaka attract sayo yon.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heartfelt Message -->
+            <div class="card">
+                <h2>Message Ko Para Sa'yo</h2>
+                <div class="letter-content">
+                    Happy Monthsary, ady! 
+
+                    ady ang tagal na rin natin no hanggang dulo na sana to ady ayaw ko mawala ka sakin ady.
+
+                    mahal na mahal kita ady minsan sobra akong nag tatampo sayo kasi pag nag sasabi ako na nag tatampo
+
+                    ako sayo ady minsan parang binabaliwala mo po kaya minsan na feel ko po ady valid pa ba pag tatampo ko
+
+                    kasi pag nag sasabi ako sayo na nag tatampo minsan dedma mo lang po e 
+
+                    pero alam mo ady may times din na sobra sama ng loob ko sayo kasi parang kayang kaya moko di kausapin ng isang Araw
+                    
+                    nasasaktan lang ako minsan ady pag ganun ka sakin parang na feel ko po kasi parang wala nako sayo
+
+                    kaya diba nag sasabi ako sayo ady
+
+                    pero kahit ganun ady natatakot ako mawala ka ady ikaw lang meron ako ady 
+
+                    kaya di ko maiwasan di matakot na baka pag nag work or nag aral kana baka makahanap ka ng iba 
+
+                    kasi alam mo naman napaka baba ng tingin ko sa sarili ko 
+
+                    alam ko po kasi na madali lang ako sukuan madali mo lang ako mapalitan kaya pansin mo po doble effort ako sayo minsan ady
+
+                    kasi natatakot ako mawala ka sakin mahal kita may tiwala ako sayo ady di ko lang po maiwasan di mag overthink
+
+                    kasi nga po napakababa lang ng tingin ko sa sarili ko 
+
+                    never ko pineke nararamdaman ko sayo ady alam mo yan never ako nag sinungaling sayo ady
+
+                    kasi ayon lang laban ko sa iba yung pagiging totoo at pagiging ma effort ko para sayo
+
+                    di ko naman po inaano na ibalik mo sakin lahat ng effort ko ady 
+
+                    deserve mo naman mahilin ng maayos at di ka saktan kaya kahit nag tatampo ako sayo diba ikaw parin iniisip ko
+
+                    kasi sobrang mahal kita ady takot na takot ako mawala ka sakin 
+
+                    sa tuwing di ka nag reply diba dun ako napaka oa kasi ayaw ko napo maulit talaga nung iniwan moko ady
+
+                    na trauma na siguro ako ady pero totoo yon takot na takot ako pag dika  nag chachat 
+
+                    kaya sana ady piliin mo parin ako ady ahhh sana hanggang dulo na talaga ady
+
+                    patunayan ko naman sayo never ako mag bago mamahlin kita ng lubos ady
+
+                    sorry if di ko nagagawa yung ibang mga gusto mo ady pero gagawin ko po best ko para sayo ady ko
+
+                    i love you ady mahal na mahal kita ady happy monthsary
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Set Anniversary Date: June 2, 2025
+        const startDate = new Date("June 2, 2025 00:00:00").getTime();
+
+        function updateCounter() {
+            const now = new Date().getTime();
+            const difference = now - startDate;
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days;
+            document.getElementById("hours").innerText = hours;
+            document.getElementById("minutes").innerText = minutes;
+            document.getElementById("seconds").innerText = seconds;
+        }
+
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        // HTML5 Audio Controls linked with Vocaroo
+        const audio = document.getElementById("bg-music");
+        const musicBtnText = document.getElementById("music-text");
+        const musicIcon = document.getElementById("music-icon");
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    musicBtnText.innerText = "Pause Music";
+                    musicIcon.className = "fa-solid fa-pause";
+                }).catch(err => {
+                    console.log("Playback error: ", err);
+                });
+            } else {
+                audio.pause();
+                musicBtnText.innerText = 'Play "All of Me"';
+                musicIcon.className = "fa-solid fa-music";
+            }
+        }
+
+        audio.addEventListener("ended", () => {
+            musicBtnText.innerText = 'Play "All of Me"';
+            musicIcon.className = "fa-solid fa-music";
+        });
+
+        // Open Card Function
+        function openCard() {
+            document.getElementById("envelope-section").style.display = "none";
+            document.getElementById("content-section").style.display = "block";
+            
+            // Auto play Vocaroo audio when envelope is opened
+            audio.play().then(() => {
+                musicBtnText.innerText = "Pause Music";
+                musicIcon.className = "fa-solid fa-pause";
+            }).catch(err => {
+                console.log("Autoplay prevented: ", err);
+            });
+        }
+
+        // Floating Hearts Canvas Animation
+        const canvas = document.getElementById("hearts-canvas");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        const hearts = [];
+        class Heart {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 15 + 8;
+                this.speedY = Math.random() * 1.5 + 0.8;
+                this.opacity = Math.random() * 0.5 + 0.3;
+            }
+            update() {
+                this.y -= this.speedY;
+                if (this.y < -20) {
+                    this.y = canvas.height + 20;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = "#ff6b81";
+                ctx.beginPath();
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(this.x, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x, this.y, this.x - this.size / 2, this.y, this.x - this.size / 2, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x, this.y + this.size, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + topCurveHeight, this.x + this.size / 2, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x + this.size / 2, this.y, this.x, this.y, this.x, this.y + topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 25; i++) {
+            hearts.push(new Heart());
+        }
+
+        function animateHearts() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hearts.forEach(heart => {
+                heart.update();
+                heart.draw();
+            });
+            requestAnimationFrame(animateHearts);
+        }
+        animateHearts();
+    </script>
+</body>
+</html>
